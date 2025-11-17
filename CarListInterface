@@ -1,0 +1,20 @@
+package carFactory;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+
+public interface CarListInterface extends Remote {
+
+    //add a car to the remote list
+    void addCar(Car c) throws RemoteException;
+
+    //get the whole car list
+    ArrayList<Car> getCars() throws RemoteException;
+
+    //replace a car at an index (for edit)
+    void updateCar(int index, Car c) throws RemoteException;
+
+    //delete a car from the list
+    void deleteCar(int index) throws RemoteException;
+}
