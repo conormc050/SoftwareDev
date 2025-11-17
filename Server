@@ -1,0 +1,28 @@
+package carFactory;
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+public class Server {
+
+    public static void main(String[] args) {
+        System.out.println("Car Server Started");
+
+        try {
+            //RMI registry
+            Registry r = LocateRegistry.createRegistry(1234);
+
+            //create remote list
+            CarList list = new CarList();
+            System.out.println("Remote Car List Created");
+
+            //bind to registry
+            r.bind("carListObject", list);
+
+            System.out.println("CarList Registered");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
