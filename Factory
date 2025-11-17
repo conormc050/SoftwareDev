@@ -1,0 +1,37 @@
+package carFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Factory {
+
+private static final Map<String, Car> carMap = new HashMap<>();
+
+public static Car getCar(String carType) {
+
+    carType = carType.toLowerCase();
+
+    if (carMap.containsKey(carType)) {
+        return carMap.get(carType);
+    }
+
+    Car car;
+    switch (carType) {
+        case "van":
+            car = new Van();
+            break;
+        case "coupe":
+            car = new Coupe();
+            break;
+        case "hatchback":
+            car = new Hatchback();
+            break;
+        default:
+            throw new IllegalArgumentException("Unknown car type: " + carType);
+    }
+
+    carMap.put(carType, car);
+
+    return car;
+}
+}
