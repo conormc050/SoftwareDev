@@ -1,0 +1,10 @@
+package carFactory;
+
+public class Van extends Car {
+@OverRide
+public String getType() { return "Van"; }
+@OverRide
+public int getDoors() { return 5; }
+@OverRide
+public double getEngineSize() { return 2.5; }
+}
