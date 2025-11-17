@@ -1,0 +1,154 @@
+package carFactory;
+
+import javax.swing.;
+import java.awt.;
+import java.awt.event.;
+import java.io.;
+import java.util.ArrayList;
+
+public class Main extends JFrame implements ActionListener
+{
+
+private JTextArea area;
+private JButton showBtn, addBtn, deleteBtn, editBtn, clearBtn;
+private ArrayList<Car> cars = new ArrayList<>();
+
+public Main()
+{
+
+	//CReate the border
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setSize(500, 400);
+    setLayout(new BorderLayout());
+
+    //display car
+    area = new JTextArea();
+    add(new JScrollPane(area), BorderLayout.CENTER);
+
+    // Bottom button panel
+    JPanel panel = new JPanel();
+    showBtn = new JButton("Show Cars");
+    addBtn = new JButton("Add Car");
+    deleteBtn = new JButton("Delete Car");
+    editBtn = new JButton("Edit Car");
+    clearBtn = new JButton("Clear");
+
+    //add the buttons to the panel
+    panel.add(showBtn);
+    panel.add(addBtn);
+    panel.add(deleteBtn);
+    panel.add(editBtn);
+    panel.add(clearBtn);
+    add(panel, BorderLayout.SOUTH);
+
+    showBtn.addActionListener(this);
+    addBtn.addActionListener(this);
+    deleteBtn.addActionListener(this);
+    editBtn.addActionListener(this);
+    clearBtn.addActionListener(this);
+
+    deserializeCars();
+}
+
+private void serializeCars()
+{
+	//serialize the current list of cars
+    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("cars.ser"))) {
+        out.writeObject(cars);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+private void deserializeCars() 
+
+{
+	//Guess
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("cars.ser"))) {
+        cars = (ArrayList<Car>) in.readObject();
+    } catch (Exception e) {
+        cars = new ArrayList<>();
+    }
+}
+
+
+private void showCars() 
+{
+	//Display the current list of cars 
+    area.setText("");
+    if (cars.isEmpty()) {
+    	//if list is empty
+        area.append("No cars here.\n");
+    } else {
+        for (int i = 0; i < cars.size(); i++)
+        {
+            area.append((i + 1) + ". " + cars.get(i).toString() + "\n");
+        }
+    }
+}
+
+
+private void addCar() 
+{
+	//select a car from the index to add to the list 
+    String[] options = {"Van", "Coupe", "Hatchback"};
+    String type = (String) JOptionPane.showInputDialog(this,"Choose car typee:", "Add Car",
+    JOptionPane.PLAIN_MESSAGE, null, options, "Van");
+
+    //add serialize and the display the new list 
+    if (type != null) {
+        Car newCar = Factory.getCar(type);
+        cars.add(newCar);
+        serializeCars();
+        showCars();
+    }
+}
+
+private void deleteCar() 
+{
+	
+	//select the unwanted car from the index 
+    String input = JOptionPane.showInputDialog(this, "Enter car number to delete:");
+    try {
+        int index = Integer.parseInt(input) - 1;
+        if (index >= 0 && index < cars.size())
+        {
+            cars.remove(index);
+            serializeCars();
+            showCars();
+        } else {
+            JOptionPane.showMessageDialog(this, "No car here.");
+        }
+    } catch (Exception e) {
+    	//incorrect input 
+        JOptionPane.showMessageDialog(this, "Please enter a valid number.");
+    }
+}
+@Override
+public void actionPerformed(ActionEvent e) 
+{
+    if (e.getSource() == showBtn) showCars();
+    else if (e.getSource() == addBtn) addCar();
+    else if (e.getSource() == deleteBtn) deleteCar();
+    else if (e.getSource() == clearBtn) area.setText("");
+// else if (e.getSource() == editBtn) editcar();
+}
+
+// private void editcar()
+// change the type of car selected in the list
+// String input = JOptionPane.showInputDialog(this, "Enter Number of the car you would like to edit:");
+// try {
+// int index = Integer.parseInt(input) -1;
+// if(index >= 0 && index < cars.size())
+// {
+// //cars.
+// }
+
+// }
+// }
+
+public static void main(String[] args)
+{
+    SwingUtilities.invokeLater(() -> new Main().setVisible(true));
+}
+}
