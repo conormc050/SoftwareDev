@@ -1,0 +1,12 @@
+import java.io.Serializable;
+
+public abstract class Car implements Serializable {
+public abstract String getType();
+public abstract int getDoors();
+public abstract double getEngineSize();
+
+@Override
+public String toString() {
+    return getType() + " | " + getDoors() + " doors | " + getEngineSize() + "L";
+}
+}
